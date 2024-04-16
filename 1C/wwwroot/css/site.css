@@ -62,3 +62,119 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+
+h1 {
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.add-btn {
+    background-color: orange;
+    color: white;
+    border: 2px solid chocolate;
+    border-radius: 4px;
+    font-size: 18px;
+    padding: 6px 24px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.delete-btn {
+    background: light-gray;
+    border: 2px solid gray;
+    border-radius: 4px;
+    font-size: 18px;
+    padding: 6px 24px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: gray;
+}
+
+.add-btn:hover {
+    background-color: chocolate;
+}
+
+.delete-btn:hover {
+    background-color: gray;
+    color: white;
+}
+
+.agents-table {
+    width: 100%;
+    border: 1px solid gray;
+    margin-bottom: 36px;
+}
+
+    .agents-table th {
+        font-size: 26px;
+        font-weight: 600;
+        padding: 10px 12px;
+        border: 1px solid gray;
+        background-color: gainsboro;
+    }
+
+    .agents-table td {
+        font-size: 22px;
+        font-weight: 500;
+        padding: 6px 12px;
+        border: 1px solid gray;
+    }
+
+.hr {
+    margin-bottom: 40px;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.modal-header {
+    background-color: lemonchiffon;
+}
+
+.modal form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal form label {
+    font-size: 24px;
+}
+
+    .modal form select {
+        width: 100%;
+        margin-bottom: 8px;
+        padding: 10px 6px;
+        font-size: 20px;
+    }
+
+    .modal form input {
+        width: 100%;
+        margin-bottom: 8px;
+        padding: 6px;
+        font-size: 20px;
+    }
+
+.add-agent-input {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 20px;
+}
+
+
+.total-price {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 30px;
+    font-weight: 600;
+    gap: 4px;
+}

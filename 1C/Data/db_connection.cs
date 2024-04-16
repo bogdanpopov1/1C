@@ -1,8 +1,17 @@
-﻿namespace _1C.Data
+﻿using Microsoft.AspNetCore.Components;
+
+namespace _1C.Data
 {
-    public class db_connection
+    public class db_connection : ComponentBase
     {
-        public List<Agent> agents = new List<Agent>();
+        [Parameter]
+        public static List<Agent> agentsList { get; set; } = new List<Agent>();
+
+        [Parameter]
+        public static List<PurchaseInvoice> operationsList { get; set; } = new List<PurchaseInvoice>();
+
+        [Parameter]
+        public static double TotalPrice { get; set; }
     }
 
     public class Agent
@@ -20,12 +29,12 @@
         public PurchaseInvoice(Agent agent, double price)
         {
             Agent = agent;
-            this.price = price;
+            this.Price = price;
             DateTime = DateTime.Now;
         }
 
         public Agent Agent { get; set; }
-        public double price { get; set; }
+        public double Price { get; set; }
         public DateTime DateTime { get; set; }
     }
 }

@@ -1,7 +1,139 @@
 ﻿@using _1C.Data;
+@inherits db_connection
 
-<h3>Агенты</h3>
+<h3>Контрагенты</h3>
+
+<button class="add-btn" @onclick=OpenAddModal>Создать</button>
+<button class="delete-btn" @onclick=OpenDeleteModal>Удалить</button>
+
+<table class="agents-table">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (agentsList.Count > 0)
+        {
+            @foreach (var agent in agentsList)
+            {
+                <tr>
+                    <td>@agent.Name</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<hr class="hr"/>
+
+@if (addTrigger)
+{
+    <div class="modal" tabindex="-1" style="display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавление нового контрагента</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть" @onclick=CloseAddModal></button>
+                </div>
+                <div class="modal-body">
+                    <input @bind-value="Name" type="text" placeholder="Наименование" class="add-agent-input"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @onclick=AddAgent>Добавить</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick=CloseAddModal>Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (deleteTrigger)
+{
+    <div class="modal" tabindex="-1" style="display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Удаление контрагента</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть" @onclick=CloseDeleteModal></button>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+                        <label for="agents">Контрагент</label>
+                        <select id="agents" name="agents" value="@Agent?.Name" @onchange="OnAgentChange">
+                            <option value="" hidden disabled selected>-- Выберите контрагента --</option>
+                            @if (agentsList.Count > 0)
+                            {
+                                @foreach (var agent in agentsList)
+                                {
+                                    <option value="@agent.Name">@agent.Name</option>
+                                }
+                            }
+                        </select>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @onclick=DeleteAgent>Удалить</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick=CloseDeleteModal>Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    public string Name { get; set; } = string.Empty;
+    public Agent Agent { get; set; } = null;
 
+    public bool addTrigger = false;
+    public bool deleteTrigger = false;
+
+    public void AddAgent()
+    {
+        if (Name != string.Empty)
+        {
+            agentsList.Add(new Agent(Name));
+            Name = string.Empty;
+            addTrigger = false;
+        }
+    }
+
+    public void OpenAddModal()
+    {
+        addTrigger = true;
+
+    }
+
+    public void CloseAddModal()
+    {
+        addTrigger = false;
+    }
+
+    public void DeleteAgent()
+    {
+        if (Agent != null)
+        {
+            agentsList.Remove(Agent);
+            Agent = null;
+            deleteTrigger = false;
+        }
+    }
+
+    public void OpenDeleteModal()
+    {
+        deleteTrigger = true;
+    }
+
+    public void CloseDeleteModal()
+    {
+        deleteTrigger = false;
+    }
+
+    private void OnAgentChange(ChangeEventArgs e)
+    {
+        var agentName = e.Value?.ToString();
+        Agent = agentsList.FirstOrDefault(a => a.Name == agentName);
+    }
 }

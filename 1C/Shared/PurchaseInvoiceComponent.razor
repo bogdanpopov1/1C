@@ -1,7 +1,140 @@
 ﻿@using _1C.Data;
+@inherits db_connection
 
-<h3>Приходная-накладная</h3>
+<h3>Приходная-Накладная</h3>
+
+<button class="add-btn" @onclick=OpenModal>Создать</button>
+<button class="delete-btn" @onclick=ClearOperations>Очистить записи</button>
+
+<table class="agents-table">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Дата и время</th>
+            <th>Контрагент</th>
+            <th>Стоимость</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (operationsList.Count > 0)
+        {
+            @foreach (var operation in operationsList)
+            {
+                @if (operation.Price > 0)
+                {
+                    <tr style="background-color:palegreen">
+                        <td>@operationsList.IndexOf(operation)</td>
+                        <td>@operation.DateTime</td>
+                        <td>@operation.Agent.Name</td>
+                        <td>@operation.Price</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr style="background-color:lightcoral">
+                        <td class="number-td">@operationsList.IndexOf(operation)</td>
+                        <td>@operation.DateTime</td>
+                        <td>@operation.Agent.Name</td>
+                        <td>@operation.Price</td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+
+<hr />
+
+@if (confirmation)
+{
+    <div class="modal" tabindex="-1" style="display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Новая операция</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть" @onclick=CloseModal></button>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+                        <label for="agents">Контрагент</label>
+                        <select id="agents" name="agents" value="@Agent?.Name" @onchange="OnAgentChange">
+                            <option value="" hidden disabled selected>-- Выберите контрагента --</option>
+                            @if (agentsList.Count > 0)
+                            {
+                                @foreach (var agent in agentsList)
+                                {
+                                    <option value="@agent.Name">@agent.Name</option>
+                                }
+                            }
+                        </select>
+
+                        <label for="price">Стоимость</label>
+                        <input @bind-value="Price" type="text" class="price-input" id="price" />
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @onclick=NewOperation>Добавить</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick=CloseModal>Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<h3 class="total-price">
+    @if (@TotalPrice > 0)
+    {
+        <h3 class="total-price" style="color:limegreen">Денежный фонд: @TotalPrice ₽</h3>
+    }
+    else if (@TotalPrice < 0)
+    {
+        <h3 class="total-price" style="color:crimson">Денежный фонд: @TotalPrice ₽</h3>
+    }
+    else
+    {
+        <h3 class="total-price" style="color:black">Денежный фонд: @TotalPrice ₽</h3>
+    }
+</h3>
 
 @code {
+    public Agent Agent { get; set; } = null;
+    public double Price { get; set; } = 0;
 
+    public bool confirmation = false;
+
+    public void NewOperation()
+    {
+        if (Agent != null && Price != 0)
+        {
+            operationsList.Add(new PurchaseInvoice(Agent, Price));
+            TotalPrice += Price;
+            Agent = null;
+            Price = 0;
+            confirmation = false;
+        }
+    }
+
+    public void OpenModal()
+    {
+        confirmation = true;
+    }
+
+    public void CloseModal()
+    {
+        confirmation = false;
+    }
+
+    private void OnAgentChange(ChangeEventArgs e)
+    {
+        var agentName = e.Value?.ToString();
+        Agent = agentsList.FirstOrDefault(a => a.Name == agentName);
+    }
+
+    public void ClearOperations()
+    {
+        TotalPrice = 0;
+        operationsList.Clear();
+    }
 }
